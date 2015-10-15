@@ -1,12 +1,10 @@
-var http = require('http');
 var express = require('express');
-var io = require('./ws.js');
+var app = express();
+var server = require('http').Server(app);
+var io = require('./ws.js')(server);
 
-var server = express();
+app.use(express.static(__dirname + '/../app'));
 
-server.use(express.static(__dirname + '/../app'));
-
-http.createServer(server).listen(3000, function(){
-	console.log("Servidor corriendo en el puerto %d", this.address().port);
-	io(this);
-})
+server.listen(3000, function(){
+	console.log("Servidor corriendo");
+});
