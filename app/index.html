@@ -1,0 +1,54 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+		
+		<video autoplay id="stream" width="300" height="230"></video>
+		<canvas id="preview" width="300" height="230" style="display: none"></canvas>
+		<button id="tomarFoto">Capturar</button>
+		<ul id="listado">
+			
+		</ul>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+
+			URL = window.URL || window.mozURL || window.webkitURL;
+
+			var App = {};
+			App.camara = function(){
+				var canvas = window.preview;
+				var video = window.stream;
+				var btn = window.tomarFoto;
+				var listado = window.listado;
+				var imagen = {};
+
+				navigator.getUserMedia({video: 1}, function(stream){
+					video.src = URL.createObjectURL(stream);
+
+					btn.addEventListener('click', function(){
+						canvas.getContext('2d')
+						.drawImage(video, 0, 0, 300, 230);
+
+						imagen.id = 'imagen-' + Date.now();
+						imagen.data = canvas.toDataURL('image/png');
+						
+						App.ws.emit('imagen', imagen);
+					});
+				}, function(err){
+					alert("ERROR!");
+				})
+			}
+			
+			App.ws = io.connect('ws://localhost:3000');
+			App.ws.on('ready', function(){
+				console.log("Websockets listos");
+			});
+			App.ws.on('imagen', function(img){
+				listado.innerHTML += '<li><img src="' + img.data + '" alt="' + img.id + '"></li>';
+			})
+			App.camara();
+		</script>
+	</body>
+</html>
