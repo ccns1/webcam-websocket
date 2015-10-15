@@ -41,7 +41,7 @@
 				})
 			}
 			
-			App.ws = io.connect('ws://localhost:3000');
+			App.ws = io.connect('ws://' + location.host);
 			App.ws.on('ready', function(){
 				console.log("Websockets listos");
 			});
