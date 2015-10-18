@@ -1,0 +1,16 @@
+{
+  "name": "webcam-tutorial",
+  "version": "0.0.1",
+  "homepage": "https://github.com/skal88/webcam-websocket",
+  "authors": [
+    "skal88 <skal88@me.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
