@@ -38,7 +38,18 @@
 		
 		<canvas id="preview" width="300" height="230" style="display: none"></canvas>
 		
+
+		<!-- jQuery -->
+		<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+		
+		<!-- App -->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="./scripts/camera.js"></script>
+		
+		<script>
+			$(function(){
+				App.camara();
+			})
+		</script>
 	</body>
 </html>

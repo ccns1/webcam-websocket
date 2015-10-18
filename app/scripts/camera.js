@@ -3,12 +3,15 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || 
 URL = window.URL || window.mozURL || window.webkitURL;
 
 var App = {};
+App.destination = '';
 App.camara = function(){
 	var canvas = window.preview;
 	var video = window.stream;
 	var btn = window.tomarFoto;
 	var listado = window.listado;
 	var imagen = {};
+
+	selectUser('');
 
 	navigator.getUserMedia({video: 1}, function(stream){
 		video.src = URL.createObjectURL(stream);
@@ -40,26 +43,39 @@ App.ws.on('imagen', function(img){
 App.ws.on('actUser', function(users){
 	actualizarUsers(users);
 })
-App.camara();
 
 function actualizarUsers(users){
 	App.users = users;
 	listUsuarios = window.usuarios;
 	listUsuarios.innerHTML = '';
+	listUsuarios.innerHTML += '<li class="list-group-item active" data-dest="">Nadie</li>'
+	listUsuarios.innerHTML += '<li class="list-group-item" data-dest="all">Todos</li>'
 	users.map(function(user){
 		if(user.id == App.user.id) return;
 		var name = user.name ? user.name : user.id;
-		listUsuarios.innerHTML += '<li class="list-group-item" onclick="selectUser(\'' + user.id + '\')">' + name + '</li>';
+		listUsuarios.innerHTML += '<li class="list-group-item" data-dest="' + user.id + '">' + name + '</li>';
 	})
 	
 }
 
+$('#usuarios').on('click', '.list-group-item', function(){
+	$('#usuarios li').removeClass('active');
+    $(this).addClass('active');
+    var id = $(this).attr('data-dest');
+    selectUser(id);
+});
+
 function selectUser(id){
 	var name;
 	App.destination = id;
-	for(var i=0; i < App.users.length; i++){
-		if(App.users[i].id == id)
-			name = App.users[i].name ? App.users[i].name : App.users[i].id;
+	if(id == '' ){ window.toText.innerHTML = "Selecciona usuario"; return; }
+	if(id != 'all'){
+		for(var i=0; i < App.users.length; i++){
+			if(App.users[i].id == id)
+				name = App.users[i].name ? App.users[i].name : App.users[i].id;
+		}
+	} else{
+		name = 'todos';
 	}
 	window.toText.innerHTML = "Para: " + name;
 }

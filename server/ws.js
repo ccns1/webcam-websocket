@@ -21,7 +21,11 @@ module.exports = function(server){
 			fs.writeFile( img.id + ".png", base64Data, 'base64', function(err) {
 			  if(err){ console.log(err); return; }
 
-			  socket.to(data.destination).emit('imagen', img);
+			  if(data.destination == "all"){
+			  	socket.broadcast.emit("imagen", img);
+			  } else if( data.destination != '' ){
+			  	socket.to(data.destination).emit('imagen', img);
+			  }
 			});
 		});
 
